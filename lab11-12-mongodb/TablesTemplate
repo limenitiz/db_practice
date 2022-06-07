@@ -1,0 +1,127 @@
+// 8. оборудование театра: роль, спектакль, реквизит (для роли /как часть костюма), название
+//      костюма, деталь костюма, размер, автор модели, дата разработки (учесть, чтобы в спектаклях
+//      идущих одновременно не использовались одинаковые объекты)
+
+// а. спектакли, в которых используются костюмы, имеющие в названии слово шут
+// б. костюм, в котором есть и куртка и штаны
+// в. автор, разработавший самый старый из костюмов
+// г. спектаклю, к которому разработано наибольшее число костюмов
+// д. автор, не разрабатывавший костюмы к «Золушке»
+
+
+// template
+db.performance.insertOne(
+    {
+        name: "",
+        date: ISODate("2210-12-01T00:00:00Z"),
+        roles : [
+            {
+                name : "",
+                clothes_id : [],
+                props : [
+                    {
+                        name : "",
+                        description : ""
+                    }
+                ]
+            }
+        ]
+    }
+);
+
+// template
+db.author.insertOne(
+    {
+        name : "",
+        surname : "",
+        patronymic : "",
+
+        clothes_id : []
+    }
+);
+
+// template
+db.clothes.insertOne(
+    {
+        name: "",
+        date: ISODate("2020-12-14T00:00:00Z"),
+        size: 30,
+        detail : [
+            {
+                name: "",
+                description: ""
+            }
+        ]
+    }
+);
+
+// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+db.clothes.insertOne(
+    {
+        name: "Маленький король",
+        date: ISODate("2020-12-14T00:00:00Z"),
+        size: 30,
+        detail : [
+            {
+                name: "Куртка",
+                description: "Белый"
+            },
+            {
+                name: "Штаны",
+                description: "Белый"
+            },
+            {
+                name: "Шляпа",
+                description: "Белый"
+            },
+            {
+                name: "Ботинки",
+                description: "Белый"
+            }
+        ]
+    }
+);
+
+
+db.author.insertOne(
+    {
+        name : "name3",
+        surname : "surname3",
+        patronymic : "patronymic3",
+        clothes_id : [
+            db.clothes.findOne({name: "Маленький король"})._id
+        ]
+    },
+
+);
+
+db.performance.insertOne(
+    {
+        name: "Представление с королем",
+        date: ISODate("2020-05-18T14:10:30Z"),
+        roles : [
+            {
+                name : "Роль короля",
+                clothes_id : db.clothes.findOne({name: "Маленький король"})._id
+            }
+        ]
+    }
+);
+
+
+// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+db.performance.find();
+db.author.find();
+db.clothes.find();
+
+db.performance.drop();
+db.author.drop();
+db.clothes.drop();
+
+// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+

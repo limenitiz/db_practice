@@ -1,0 +1,175 @@
+// а. спектакли, в которых используются костюмы, имеющие в названии слово шут
+db.performance.find()
+
+db.performance.aggregate([
+    {
+        $lookup: {
+            from: 'clothes',
+            localField: 'roles.clothes.clothes_id',
+            foreignField: '_id',
+            as: "clothes"
+        }
+    },
+    {
+        $match: {
+            'clothes.name' : /шут/i
+        }
+    }
+])
+
+// б. костюм, в котором есть и куртка и штаны
+db.clothes.aggregate([
+    {
+        $match: {
+            $and: [
+                { 'detail.name': 'Куртка'},
+                { 'detail.name': 'Штаны'}
+            ]
+        }
+    }
+])
+
+// в. автор, разработавший самый старый из костюмов
+db.author.aggregate([
+    {
+        $lookup: {
+            from: 'clothes',
+            localField: 'clothes.clothes_id',
+            foreignField: '_id',
+            as: "clothes"
+        }
+    },
+    {
+        $project: {
+            oldest_author_clothes: { $min: "$clothes.date" },
+            name: 1
+        }
+    },
+    {
+        $group: {
+            _id: null,
+            oldest_clothes: { $min: '$oldest_author_clothes' },
+            author_data: {
+                $push: '$$ROOT'
+            }
+        }
+    },
+    {
+        $unwind: "$author_data"
+    },
+    {
+        $project:
+        {
+            'author_data.name': 1,
+            'oldest_clothes': 1,
+            'author_data.oldest_author_clothes': 1,
+            is_eq: {
+                $eq: [
+                    '$author_data.oldest_author_clothes',
+                    '$oldest_clothes'
+                ]
+            }
+        }
+    },
+    {
+        $match: {
+            is_eq: true
+        }
+    },
+    {
+        $project: {
+            'author_data.name': 1,
+            'author_data.oldest_author_clothes': 1
+        }
+    }
+])
+
+db.author.find()
+
+// г. спектаклю, к которому разработано наибольшее число костюмов
+db.performance.aggregate([
+    {
+        $lookup: {
+            from: 'clothes',
+            localField: 'roles.clothes.clothes_id',
+            foreignField: '_id',
+            as: "clothes"
+        }
+    },
+    {
+        $project: {
+            count_clothes: {
+                $size:  '$clothes'
+            },
+            name: 1
+        }
+    },
+    {
+        $group: {
+            _id: null,
+            max_count: { $max: '$count_clothes' },
+            performance_data: {
+                $push: '$$ROOT'
+            }
+        }
+    },
+    {
+        $unwind: "$performance_data"
+    },
+    {
+        $project: {
+            'max_count': 1,
+            'performance_data.name': 1,
+            'performance_data.count_clothes': 1,
+            'is_eq': {
+                $eq: [
+                    '$performance_data.count_clothes',
+                    '$max_count'
+                ]
+            }
+
+        }
+    },
+    {
+        $match: {
+            "is_eq": true
+        }
+    }
+])
+
+// д. автор, не разрабатывавший костюмы к «Золушке»
+db.author.aggregate([
+    {
+        $lookup: {
+            from: 'performance',
+            localField: 'clothes.clothes_id',
+            foreignField: 'roles.clothes.clothes_id',
+            as: "performance"
+        }
+    },
+    {
+        $project: {
+            name: 1,
+            "performance.name": 1,
+            zolushka: {
+                $filter: {
+                    input: "$performance.name",
+                    as: "p_name",
+                    cond: {
+                        $eq: [
+                            '$$p_name',
+                            'Золушка'
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    {
+        $match: {
+            zolushka: {
+                $size: 0
+            }
+        }
+    }
+])

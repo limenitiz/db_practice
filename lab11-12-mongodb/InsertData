@@ -1,0 +1,246 @@
+db.clothes.insertMany([
+    {
+        name: "Шут",
+        date: ISODate("2020-12-10T00:00:00Z"),
+        size: 30,
+        detail : [
+            {
+                name: "Куртка",
+                description: "Черная"
+            },
+            {
+                name: "Штаны",
+                description: "Черные"
+            },
+            {
+                name: "Шляпа",
+                description: "Черная"
+            },
+            {
+                name: "Брюки",
+                description: "Черный"
+            },
+            {
+                name: "Цилиндр",
+                description: "Черный"
+            },
+            {
+                name: "Ботинки",
+                description: "Черный"
+            }
+        ]
+    },
+    {
+        name: "Платье Золушки (Рабочее)",
+        date: ISODate("2020-12-11T00:00:00Z"),
+        size: 25,
+        detail : [
+            {
+                name: "Платье",
+                description: "Белое"
+            }
+        ]
+    },
+    {
+        name: "Платье Золушки (Бальное)",
+        date: ISODate("2020-12-11T00:00:00Z"),
+        size: 25,
+        detail : [
+            {
+                name: "Платье",
+                description: "Серое"
+            }
+        ]
+    },
+    {
+        name: "Костюм Мастера",
+        date: ISODate("2020-12-12T00:00:00Z"),
+        size: 25,
+        detail : [
+            {
+                name: "Штаны",
+                description: "Черный"
+            }
+        ]
+    },
+    {
+        name: "Костюм Маргариты",
+        date: ISODate("2020-12-13T00:00:00Z"),
+        size: 25,
+        detail : [ { } ]
+    },
+    {
+        name: "Маленький король",
+        date: ISODate("2020-12-14T00:00:00Z"),
+        size: 30,
+        detail : [
+            {
+                name: "Куртка",
+                description: "Белый"
+            },
+            {
+                name: "Штаны",
+                description: "Белый"
+            },
+            {
+                name: "Шляпа",
+                description: "Белый"
+            },
+            {
+                name: "Ботинки",
+                description: "Белый"
+            }
+        ]
+    }
+]);
+
+db.performance.insertMany([
+    {
+        name: "Представление с шутом",
+        date: ISODate("2020-05-15T14:10:30Z"),
+        roles : [
+            {
+                name : "Роль шута",
+                clothes : [
+                    {
+                        clothes_id : db.clothes.findOne({name: "Шут"})._id
+                    }
+                ],
+                props : [
+                    {
+                        name : "Жезл",
+                        description : "Серебрянный"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        name: "Представление с королем",
+        date: ISODate("2020-05-16T14:10:30Z"),
+        roles : [
+            {
+                name : "Роль короля",
+                clothes : [
+                    {
+                        clothes_id: db.clothes.findOne({name: "Маленький король"})._id
+                    }
+                ],
+            }
+        ]
+    },
+    {
+        name: "Представление (без ролей и одежды)",
+        date: ISODate("2020-05-17T14:10:30Z"),
+    },
+    {
+        name: "Золушка",
+        date: ISODate("2020-05-18T14:10:30Z"),
+        roles : [
+            {
+                name : "Золушка",
+                clothes : [
+                    {
+                        clothes_id: db.clothes.findOne({name: "Платье Золушки (Бальное)"})._id
+                    },
+                    {
+                        clothes_id: db.clothes.findOne({name: "Платье Золушки (Рабочее)"})._id
+                    }
+                ],
+                props : [
+                    {
+                        name : "Туфли",
+                        description : "Хрусталь"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        name: "Мастер и Маргарита",
+        date: ISODate("2020-05-19T14:10:30Z"),
+        roles : [
+            {
+                name : "Мастер",
+                clothes : [
+                    {
+                        clothes_id: db.clothes.findOne({name: "Костюм Мастера"})._id
+                    }
+                ],
+                props : [
+                    {
+                        name : "Жезл",
+                        description : "Золотой"
+                    }
+                ]
+            },
+            {
+                name : "Маргарита",
+                clothes : [
+                    {
+                        clothes_id: db.clothes.findOne({name: "Костюм Маргариты"})._id
+                    }
+                ],
+            }
+        ]
+    },
+    {
+        name: "Представление (с ролями и без одежды)",
+        date: ISODate("2020-06-20T14:10:30Z"),
+        roles : [
+            {
+                name : "Роль для пустого представления",
+            }
+        ]
+    }
+]);
+
+
+db.author.insertMany([
+    {
+        name : "name1",
+        surname : "surname1",
+        patronymic : "patronymic1",
+        clothes : [
+            {
+                clothes_id : db.clothes.findOne({name: "Шут"})._id
+            }
+        ]
+    },
+    {
+        name : "name2",
+        surname : "surname2",
+        patronymic : "patronymic2",
+        clothes : [
+            {
+                clothes_id : db.clothes.findOne({name: "Платье Золушки (Бальное)"})._id
+            },
+            {
+                clothes_id : db.clothes.findOne({name: "Платье Золушки (Рабочее)"})._id
+            },
+            {
+                clothes_id : db.clothes.findOne({name: "Костюм Мастера"})._id
+            },
+            {
+                clothes_id : db.clothes.findOne({name: "Костюм Маргариты"})._id
+            }
+        ]
+    },
+    {
+        name : "name3",
+        surname : "surname3",
+        patronymic : "patronymic3",
+        clothes : [
+            {
+                clothes_id : db.clothes.findOne({name: "Маленький король"})._id
+            }
+        ]
+    },
+    {
+        name : "name4",
+        surname : "surname4",
+        patronymic : "patronymic4",
+        clothes : [ ]
+    }
+
+]);
